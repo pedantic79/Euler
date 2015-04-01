@@ -23,11 +23,9 @@ dataStr = "73167176531330624919225119674426574742355349194934\
 
 numbers = map digitToInt dataStr
 
-thirteenProd xs m | length xs > 13 = thirteenProd (tail xs) mNext
-                  | otherwise      = m
-  where p = product $ take 13 xs
-        mNext = max p m
+prod n xs | length xs > n = max p $ prod n $ tail xs
+          | otherwise     = 0
+  where p = product $ take n xs
 
-
-problem8 = thirteenProd numbers 0
+problem8 = prod 13 numbers
         
