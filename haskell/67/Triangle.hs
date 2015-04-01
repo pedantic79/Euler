@@ -3,6 +3,7 @@ t = [5, 9, 6, 4, 6, 8, 0, 7, 1, 5]
 t2 = [[5], [9, 6], [4, 6, 8], [0, 7, 1, 5]]
 
 
+getMaxSlow :: [Integer] -> Integer
 getMaxSlow = getMax' 0 0
   where getMax' pos row tri | null nextTri = value
                             | otherwise = value + max left right
@@ -18,6 +19,7 @@ getMaxSlow = getMax' 0 0
    e.g. next [4, 6, 8] [0, 7, 1, 5]
    returns [11, 13, 13]
 -}
+next :: [Integer] -> [Integer] -> [Integer]
 next _ [z]           = []
 next (x:xs) (y:z:zs) = x + max y z : next xs (z:zs)
 
@@ -35,19 +37,21 @@ next (x:xs) (y:z:zs) = x + max y z : next xs (z:zs)
                   1 + 2 + foldr1 (+) [3, 4]  = 1 + 2 + 7
                   1 + 2 + 3 + foldr1 (+) [4] = 1 + 2 + 3 + 4
 
-   for foldTri, we calculate the sum of the two rows and return the value
-   This let's us compute the next fold
--}                                    
-foldTri = foldr1 next
+   for getMaxFast, we use foldr1 to calculate the sums of the last row moving
+   right to left. At the end of the foldr1, we have a single element list
+   containing the value. Use head to take that.
+-}
+getMaxFast :: [[Integer]] -> Integer
+getMaxFast = head . foldr1 next
 
--- Since the fold operations returns a single element array take the head
-getMaxFast = head . foldTri
+getMax algo mapper f = print . algo . mapper =<< readFile f
 
-slow f = readFile f >>= print . getMaxSlow . helper
-  where helper = map read . words
+slow :: FilePath -> IO ()
+slow = getMax getMaxSlow (map read . words)
 
-fast f = readFile f >>= print . getMaxFast . helper
-  where helper = map (map read . words) . lines
+fast :: FilePath -> IO ()
+fast = getMax getMaxFast (map (map read . words) . lines)
 
+main :: IO ()
 main = fast "triangle.txt"
 
