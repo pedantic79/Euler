@@ -23,6 +23,13 @@ next :: [Integer] -> [Integer] -> [Integer]
 next _ [z]           = []
 next (x:xs) (y:z:zs) = x + max y z : next xs (z:zs)
 
+initialize = map (\x -> (x, [x]))
+
+nextPair _ [z] = []
+nextPair (x:xs) (y:z:zs) = (x1 + m1, x2 ++ m2) : nextPair xs (z:zs)
+  where (m1, m2) = if fst y > fst z then y else z
+        (x1, x2) = x
+
 {- foldr1 starts by passing the last two elements of the list to the function
    it then calls the function again with the next element and value returned by
    the previous call. e.g.
@@ -44,6 +51,8 @@ next (x:xs) (y:z:zs) = x + max y z : next xs (z:zs)
 getMaxFast :: [[Integer]] -> Integer
 getMaxFast = head . foldr1 next
 
+getMaxPath = head . foldr1 nextPair
+
 getMax algo mapper f = print . algo . mapper =<< readFile f
 
 slow :: FilePath -> IO ()
@@ -51,6 +60,9 @@ slow = getMax getMaxSlow (map read . words)
 
 fast :: FilePath -> IO ()
 fast = getMax getMaxFast (map (map read . words) . lines)
+
+tracePath f = readFile f >>= print . getMaxPath . helper
+  where helper = (map initialize) . map (map read . words) . lines
 
 main :: IO ()
 main = fast "triangle.txt"
