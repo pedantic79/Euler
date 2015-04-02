@@ -38,7 +38,7 @@ prod m l | length l >= m = p:prod m t
 -- rotate the 2-d list 90 degrees
 -- making rows now columns
 vert mss | null (head mss) = []
-         | otherwise      = mapMaybe headMaybe mss : vert (mapMaybe tailMaybe mss)
+         | otherwise = mapMaybe headMaybe mss :  vert (mapMaybe tailMaybe mss)
 
 -- implementation of head that returns a Maybe
 -- Nothing if the list is empty
@@ -67,7 +67,7 @@ a = prod4
 -- vertical
 b = prod4 . vert
 -- descending left to right
-c = concatMap (prod4 . vert) . diagDown4
+c = concatMap b . diagDown4
 -- ascending left to right
 d = c . reverse
 
