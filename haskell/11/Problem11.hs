@@ -71,5 +71,4 @@ c = concatMap b . diagDown4
 -- ascending left to right
 d = c . reverse
 
-problem11 = maximum $ a numMatrix ++ b numMatrix ++ c numMatrix ++ d numMatrix
-
+problem11 = maximum $ concatMap ($ numMatrix) [a, b, c, d]
