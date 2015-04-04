@@ -1,4 +1,4 @@
-import Data.Maybe (mapMaybe)
+import Data.List (transpose)
 
 numStr = [ "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08"
          , "49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00"
@@ -34,21 +34,6 @@ prod m l | length l >= m = p:prod m t
   where p = product $ take m l
         t = tail l
 
-
--- rotate the 2-d list 90 degrees
--- making rows now columns
-vert mss | null (head mss) = []
-         | otherwise = mapMaybe headMaybe mss :  vert (mapMaybe tailMaybe mss)
-
--- implementation of head that returns a Maybe
--- Nothing if the list is empty
-headMaybe [] = Nothing
-headMaybe (x:xs) = Just x
-
--- tail version of headMaybe
-tailMaybe [] = Nothing
-tailMaybe (x:xs) = Just xs
-
 -- takes m rows, and shift them
 diagDown m l@(x:xs) | length l >= m = rows : diagDown m xs
                     | otherwise     = []
@@ -58,14 +43,13 @@ diagDown m l@(x:xs) | length l >= m = rows : diagDown m xs
 shiftRows [] = []
 shiftRows (r:rs) = r:shiftRows (map tail rs)
 
-
 prod4 = maximum . map (prod 4)
 diagDown4 = diagDown 4
 
 -- horizontal
 a = prod4
 -- vertical
-b = prod4 . vert
+b = prod4 . transpose
 -- descending left to right
 c = concatMap b . diagDown4
 -- ascending left to right
