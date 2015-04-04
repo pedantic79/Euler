@@ -1,5 +1,5 @@
 -- infinite primes from problem 7
-primes = 2:((filter (/=0) . map next) [3,5..])
+primes = 2:(filter (/=0) . map next) [3,5..]
 
 next n = next' $ takeWhile (\x -> x * x <= n) primes
   where

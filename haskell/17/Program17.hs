@@ -1,10 +1,13 @@
 import Data.Char (digitToInt)
 import Data.Maybe (fromMaybe)
+import Control.Arrow ((***))
 
 slice from to xs = take (to - from + 1) (drop from xs)
 look m = fromMaybe "" $ lookup m numStr
 lookStr s = look (read s :: Int)
-gen n = map (\(a,b) -> (n+a,(look n)++b)) $ slice 1 9 numStr
+--gen n = map (\(a,b) -> (n+a,look n++b)) $ slice 1 9 numStr
+gen n = map ((+) n *** (++) (look n)) $ slice 1 9 numStr
+
 
 numStr = [ (0,"zero"), (1,"one"), (2,"two"), (3,"three"), (4,"four")
          , (5,"five"), (6,"six"), (7,"seven"), (8,"eight"), (9,"nine")

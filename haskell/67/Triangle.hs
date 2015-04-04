@@ -62,7 +62,7 @@ fast :: FilePath -> IO ()
 fast = getMax getMaxFast (map (map read . words) . lines)
 
 tracePath f = readFile f >>= print . getMaxPath . helper
-  where helper = (map initialize) . map (map read . words) . lines
+  where helper = map (initialize . map read . words) . lines
 
 main :: IO ()
 main = fast "triangle.txt"

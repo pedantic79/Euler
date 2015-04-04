@@ -1,4 +1,4 @@
-remainder n = and $ map (\x -> n `mod` x == 0) [2..20]
+remainder n = all (\x -> n `mod` x == 0) [2..20]
 
 problem5a = helper 380
   where helper n | remainder n = n
