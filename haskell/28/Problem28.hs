@@ -10,9 +10,18 @@
 -}
 
 snd3 (_,y,_) = y
+
+{- rowStep returns a tuple containing the first element
+   in the box, the last element in the box, and the steps
+   inbetween 
+
+   rowMax is just highest values in the box
+-}
 rowStp = map (\x -> ((x - 2)^2+1, x^2, x-2)) [1,3..]
 rowMax = map snd3 rowStp
 
+-- given an arbitrary n, it will find which box from
+-- rowStp it matches
 range n = head . dropWhile ((<n) . snd3) $ rowStp
 
 includeList 1 = [1]
