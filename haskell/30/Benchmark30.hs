@@ -12,7 +12,7 @@ numberToList2 = snd . head . dropWhile ((>0) . fst) . numToListInf
 numToListInf n = iterate (\(a,rs) -> (a `quot` 10, a `rem` 10:rs)) (n, [])
 
 numberToList3 :: Integer -> [Integer]
-numberToList3 = reverse . unfoldr (helper)
+numberToList3 = reverse . unfoldr helper
   where helper x | x == 0    = Nothing
                  | otherwise = let (q, r) = x `quotRem` 10 in Just (r, q)
 
