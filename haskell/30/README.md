@@ -1,4 +1,4 @@
-benchmarking show/7893
+`benchmarking show/7893
 time                 99.12 ns   (98.82 ns .. 99.48 ns)
                      0.999 R²   (0.997 R² .. 1.000 R²)
 mean                 103.2 ns   (100.6 ns .. 109.4 ns)
@@ -53,4 +53,4 @@ time                 59.40 ns   (59.18 ns .. 59.61 ns)
 mean                 59.07 ns   (58.85 ns .. 59.36 ns)
 std dev              819.0 ps   (609.5 ps .. 1.315 ns)
 variance introduced by outliers: 16% (moderately inflated)
-
+`
