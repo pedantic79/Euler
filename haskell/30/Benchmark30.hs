@@ -16,6 +16,9 @@ numberToList3 = reverse . unfoldr helper
   where helper x | x == 0    = Nothing
                  | otherwise = let (q, r) = x `quotRem` 10 in Just (r, q)
 
+numberToList4 :: Integer -> [Int]
+numberToList4 = map (flip (-) (fromEnum '0') . fromIntegral . fromEnum) . show
+
 main = defaultMain
        [ bgroup "show" [ bench "7893" $ nf numberToList1 7893
                        , bench "456 " $ nf numberToList1 456
@@ -31,6 +34,11 @@ main = defaultMain
                        , bench "456 " $ nf numberToList3 456
                        , bench "23  " $ nf numberToList3 23
                        , bench "1   " $ nf numberToList3 1
+                       ]
+       , bgroup "frEn" [ bench "7893" $ nf numberToList4 7893
+                       , bench "456 " $ nf numberToList4 456
+                       , bench "23  " $ nf numberToList4 23
+                       , bench "1   " $ nf numberToList4 1
                        ]
        ]
        
