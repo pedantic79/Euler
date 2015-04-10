@@ -1,11 +1,14 @@
 import Control.Monad.State
 import qualified Data.IntMap as IntMap
+import Data.List (unfoldr)
 
 digits :: Int -> [Int]
 digits = map (flip (-) (fromEnum '0') . fromEnum) . show
 
+calcSq :: Int -> Int
 calcSq = sum . map (\x -> x * x) . digits
 
+next :: Int -> Int
 next n
   | n == 1 || n == 89 = n
   | otherwise = next $ calcSq n
@@ -23,6 +26,7 @@ terminator n = do
 
 terminators :: [Int] -> State (IntMap.IntMap Int) [Int]
 terminators = mapM terminator
+
 
 problem92 = length . filter (==89) . map next $ [1..10000000]
 problem92a = length . filter (==89) $
