@@ -13,7 +13,7 @@ factorize n = factorize' 2
                 iSq = i * i
 
 
-isZeroToNine c = c `elem` "123456789"
+isZeroToNine = (`elem` "123456789")
 
 check (a,b,c) = testComplete (show a) (show b) (show c)
 testComplete a b c = iLen == 9 && uLen == 9 && uTst
