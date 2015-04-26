@@ -10,9 +10,9 @@ primesST = 2 : oddprimes
       filter ((`all` fs) . ((/=0).) . rem) [x,x+2..q-2]
       ++ sieve (q+2) (head t^2) t ft
 
-rotateNum n = helper n
+rotateNum n = n:helper n
   where
-    (num,pow10) = numLen n (1,1)
+    (num,pow10) = numLen n (0,1)
     helper m = take num $ nextNum:helper nextNum
       where nextNum = q + r
             (q,r) = (m * 10) `divMod` pow10
