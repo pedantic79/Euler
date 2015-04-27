@@ -45,7 +45,7 @@ decPaths [] = []
 pascal = iterate (\row -> zipWith (+) (0:row) (row ++ [0])) [1]
 inc = iterate incPaths [1]
 dec = takeWhile (not . null) . iterate decPaths
-solution1 n = head . last . dec $ inc !! n
 solution2 n = inc !! (2*n) !! n
+solution1 = head . last . dec . (!!) inc
 
 problem15 = solution1 20
