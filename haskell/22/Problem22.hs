@@ -2,7 +2,7 @@ import Data.Char (ord, toUpper)
 import Data.List (sort)
 import Data.Text (pack, splitOn, unpack)
 
-charVal ch = (ord . toUpper) ch - 64
+charVal = (+ (-64)) . ord . toUpper
 nameVal = sum . map charVal
 
 
