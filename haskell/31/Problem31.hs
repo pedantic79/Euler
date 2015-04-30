@@ -31,6 +31,6 @@ numbers = map (\(a,b) -> ((200-a) `div` 2 + 1,b)) countSmall
 -- We multiply the tuples together since the count b represents the number
 -- of 5p-200p combinations, and a represents the number of 1p-2p combinations
 -- to get to 200.
-countB =  sum $ map (\(a,b) -> a * (fromIntegral b)) numbers
+countB =  sum $ map (\(a,b) -> a * fromIntegral b) numbers
 
 problem31 = countA + countB

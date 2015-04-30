@@ -12,7 +12,7 @@ str2Num = read
 generateNum = takeWholeNum . gen
 
 
-gen n = map ((\x -> (length x, x)) . num2Str . (*n)) $ [1..]
+gen n = map ((\x -> (length x, x)) . num2Str . (*n)) [1..]
 
 -- take only whole numbers.
 takeWholeNum = helper (0,"")

@@ -30,6 +30,6 @@ testComplete a b c = iLen == 9 && uLen == 9 && uTst
 -- Get the third elemnt
 thd (_,_,c) = c
 
-listOfPanNum = concatMap (filter check . factorize) $ [1..10000]
+listOfPanNum = concatMap (filter check . factorize) [1..10000]
 problem32 = sum . nub . map thd $ listOfPanNum
         
