@@ -1,17 +1,15 @@
-frac = [ (a,b) | b <- [12..99], a <- [11..b-1]]
-isCancellable (x,y) = x `mod` 10 == y `div` 10
-cancellable = filter isCancellable frac
+import Control.Monad (guard)
+import Data.Ratio ((%),denominator)
+
+fraction = do
+  s <- [1..9]
+  a <- [1..9]
+  b <- [a..9]
+
+  guard $ a % b == (a * 10 + s) % (s * 10 + b)
+  return $ a % b
 
 
-cancelReduce (x,y) = realReduce (x `div` 10, y `mod` 10)
-realReduce (n,d) = let g = gcd n d in (n `div` g, d `div` g)
-mapReduced = map (\a -> (realReduce a, cancelReduce a, a)) cancellable
+-- [(16,64),(26,65),(19,95),(49,98)]
 
-isReduceSame ((a,b), (c,d),_) = a == c && b == d
-thd (_,_,c) = c
-
-nonTrivialFractions = map thd . filter isReduceSame $ mapReduced
-
-p = foldr1 (\(a,b) (c,d) -> (a*c, b*d)) nonTrivialFractions
-
-problem33 = realReduce p
+problem33 = denominator . product $ fraction
