@@ -14,9 +14,9 @@ find4Cons [] acc
   | otherwise       = []
 
 find4Cons2 :: (Ord t, Enum t) => [t] -> [t]
-find4Cons2 = head . filter (isConsec) .  map (take 4) . tails
-
-isConsec xs = xs == [(minimum xs) .. (maximum xs)]
+find4Cons2 = head . filter isConsec .  map (take 4) . tails
+  where
+    isConsec xs = xs == [(minimum xs) .. (maximum xs)]
 
 problem47 = head $ find4Cons len4Factors []
 
