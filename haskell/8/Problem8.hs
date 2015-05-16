@@ -23,7 +23,7 @@ dataStr = "73167176531330624919225119674426574742355349194934\
 
 numbers = map digitToInt dataStr
 
-prod n xs | length xs > n = max p $ prod n $ tail xs
+prod n xs | length xs > n = max p . prod n $ tail xs
           | otherwise     = 0
   where p = product $ take n xs
 
