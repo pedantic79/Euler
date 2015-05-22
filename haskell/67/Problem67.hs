@@ -1,6 +1,6 @@
 import Control.Monad (liftM)
 
-parseFile fp = liftM parse . readFile $ fp
+parseFile = liftM parse . readFile
   where
     parse s = do
       w <- liftM words . lines $ s
