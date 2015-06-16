@@ -1,14 +1,25 @@
+import qualified Data.Bimap as BM
+
 data Suit = Spades
           | Hearts
           | Diamonds
           | Clubs
           deriving (Enum, Eq, Ord, Bounded)
 
+suitStrMap = BM.fromList [ (Spades, "S")
+                         , (Hearts, "H")
+                         , (Diamonds, "D")
+                         , (Clubs, "C")
+                         ]
+
 instance Show Suit where
-  show Spades = "S"
-  show Hearts = "H"
-  show Diamonds = "D"
-  show Clubs = "C"
+  show s = suitStrMap BM.! s
+
+instance Read Suit where
+  readsPrec _ xxs@(x:xs) =
+    case BM.lookupR [x] suitStrMap of
+     Nothing -> []
+     Just n  -> [(n, xs)]
 
 data Rank = Two
           | Three
