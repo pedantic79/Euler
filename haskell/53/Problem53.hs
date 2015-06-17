@@ -65,10 +65,16 @@ data Card = Card { rank :: Rank
                  } deriving Eq
 
 instance Show Card where
-  show (Card r s) = (show r) ++ (show s)
+  show (Card r s) = show r ++ show s
 
 instance Read Card where
   readsPrec _ (r:s:xs) =
     let r' = read [r]
         s' = read [s]
     in [(Card r' s', xs)]
+
+parseFile :: FilePath -> IO [[Card]]
+parseFile f = do
+  fh <- readFile f
+  let w = map (map read . words) . lines $ fs
+  return w
