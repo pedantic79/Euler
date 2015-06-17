@@ -16,7 +16,7 @@ instance Show Suit where
   show s = suitStrMap BM.! s
 
 instance Read Suit where
-  readsPrec _ xxs@(x:xs) =
+  readsPrec _ (x:xs) =
     case BM.lookupR [x] suitStrMap of
      Nothing -> []
      Just n  -> [(n, xs)]
@@ -36,18 +36,39 @@ data Rank = Two
           | Ace
           deriving (Enum, Eq, Ord, Bounded)
 
+rankStrMap = BM.fromList [ (Ace, "A")
+                         , (King, "K")
+                         , (Queen, "Q")
+                         , (Jack, "J")
+                         , (Ten, "T")
+                         , (Nine, "9")
+                         , (Eight, "8")
+                         , (Seven, "7")
+                         , (Six, "6")
+                         , (Five, "5")
+                         , (Four, "4")
+                         , (Three, "3")
+                         , (Two, "2")
+                         ]
+
 instance Show Rank where
-  show Ace = "A"
-  show King = "K"
-  show Queen = "Q"
-  show Jack = "J"
-  show Ten = "T"
-  show Nine = "9"
-  show Eight = "8"
-  show Seven = "7"
-  show Six = "6"
-  show Five = "5"
-  show Four = "4"
-  show Three = "3"
-  show Two = "2"  
-                   
+  show r = rankStrMap BM.! r
+
+instance Read Rank where
+  readsPrec _ (x:xs) =
+    case BM.lookupR [x] rankStrMap of
+     Nothing -> []
+     Just n  -> [(n, xs)]
+
+data Card = Card { rank :: Rank
+                 , suit :: Suit
+                 } deriving Eq
+
+instance Show Card where
+  show (Card r s) = (show r) ++ (show s)
+
+instance Read Card where
+  readsPrec _ (r:s:xs) =
+    let r' = read [r]
+        s' = read [s]
+    in [(Card r' s', xs)]
