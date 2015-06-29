@@ -1,4 +1,6 @@
 import qualified Data.Bimap as BM
+import Data.List (sort,sortBy)
+import Data.Ord (compare)
 
 data Suit = Spades
           | Hearts
@@ -62,7 +64,7 @@ instance Read Rank where
 
 data Card = Card { rank :: Rank
                  , suit :: Suit
-                 } deriving Eq
+                 } deriving (Eq, Ord)
 
 instance Show Card where
   show (Card r s) = show r ++ show s
@@ -76,5 +78,25 @@ instance Read Card where
 parseFile :: FilePath -> IO [[Card]]
 parseFile f = do
   fh <- readFile f
-  let w = map (map read . words) . lines $ fs
+  let w = map (map read . words) . lines $ fh
   return w
+
+cardValue (Card r _) = fromEnum r + 2
+
+revSort = sortBy (flip compare)
+
+computeValue :: [Card] -> Int
+computeValue cs = foldl (\a c -> a * 100 + cardValue c) 0 $ revSort cs
+
+isFlush :: [Card] -> Bool
+isFlush (c:cs) =
+  let s = suit c
+  in all (==s) $ map suit cs
+
+isStraight :: [Card] -> Bool
+isStraight cs = if last cs' == 14
+                then check cs' || check ace
+                else check cs'
+  where cs' = map cardValue . sort $ cs
+        ace = 1:init cs'
+        check xs@(x:_) = [x .. x+4] == xs
