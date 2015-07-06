@@ -1,6 +1,17 @@
 import qualified Data.Bimap as BM
-import Data.List (sort,sortBy)
+import Data.List (group,sort,sortBy)
 import Data.Ord (compare)
+
+data PokerHands = HighCard
+                | Pair
+                | TwoPair
+                | ThreeKind
+                | Straight
+                | Flush
+                | FullHouse
+                | FourKind
+                | StraightFlush
+                deriving (Enum, Eq, Ord, Bounded, Show)
 
 data Suit = Spades
           | Hearts
@@ -75,6 +86,8 @@ instance Read Card where
         s' = read [s]
     in [(Card r' s', xs)]
 
+
+
 parseFile :: FilePath -> IO [[Card]]
 parseFile f = do
   fh <- readFile f
@@ -93,10 +106,56 @@ isFlush (c:cs) =
   let s = suit c
   in all (==s) $ map suit cs
 
-isStraight :: [Card] -> Bool
-isStraight cs = if last cs' == 14
-                then check cs' || check ace
-                else check cs'
-  where cs' = map cardValue . sort $ cs
+mapCV = map cardValue . sort
+mapRCV = map cardValue . revSort
+
+isStraight :: [Card] -> (Bool, Int)
+isStraight cs = if check cs'
+                then (True, lcard)
+                else if last cs' == 14
+                     then (check ace, last ace)
+                     else (False, lcard)
+  where cs' = mapCV cs
         ace = 1:init cs'
+        lcard = last cs'
         check xs@(x:_) = [x .. x+4] == xs
+
+getGroup = sortBy (\x y -> compare (length y) (length x)) . group . mapRCV
+
+isFullHouse cs =
+  let (t:p:gs) = getGroup cs
+  in length t == 3 && length p == 2
+
+isFourKind cs =
+  let (f:gs) = getGroup cs
+  in length f == 4
+
+isThreeKind cs =
+  let (t:gs) = getGroup cs
+  in length t == 3
+
+isTwoPair cs =
+  let (s:t:gs) = getGroup cs
+  in length s == 2 && length t == 2
+
+isPair cs =
+  let (s:t:gs) = getGroup cs
+  in length s == 2 && length t == 1
+
+isNone cs =
+  let (s:gs) = getGroup cs
+  in length s == 1
+
+getHandValue cs
+  | isFlush cs && isStr = (StraightFlush, strVal)
+  | isFourKind cs = (FourKind, cv)
+  | isFullHouse cs = (FullHouse, cv)
+  | isFlush cs = (Flush, cv)
+  | isStr = (Straight, strVal)
+  | isThreeKind cs = (ThreeKind, cv)
+  | isTwoPair cs = (TwoPair, cv)
+  | isPair cs = (TwoPair, cv)
+  | otherwise = (HighCard, cv)
+  where (isStr, strVal) = isStraight cs
+        gs = getGroup cs
+        cv = computeValue cs
