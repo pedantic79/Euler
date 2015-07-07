@@ -3,7 +3,7 @@ import Data.List (group,sort,sortBy)
 import Data.Ord (compare)
 
 data PokerHands = HighCard
-                | Pair
+                | OnePair
                 | TwoPair
                 | ThreeKind
                 | Straight
@@ -99,7 +99,8 @@ cardValue (Card r _) = fromEnum r + 2
 revSort = sortBy (flip compare)
 
 computeValue :: [Card] -> Int
-computeValue cs = foldl (\a c -> a * 100 + cardValue c) 0 $ revSort cs
+computeValue cs = foldl (\a c -> a * 100 + c) 0 cs'
+  where cs' = concat . getGroup $ cs
 
 isFlush :: [Card] -> Bool
 isFlush (c:cs) =
@@ -109,16 +110,8 @@ isFlush (c:cs) =
 mapCV = map cardValue . sort
 mapRCV = map cardValue . revSort
 
-isStraight :: [Card] -> (Bool, Int)
-isStraight cs = if check cs'
-                then (True, lcard)
-                else if last cs' == 14
-                     then (check ace, last ace)
-                     else (False, lcard)
-  where cs' = mapCV cs
-        ace = 1:init cs'
-        lcard = last cs'
-        check xs@(x:_) = [x .. x+4] == xs
+isStraight cs = check $ mapCV cs
+  where check xs@(x:_) = [x..x+4] == xs
 
 getGroup = sortBy (\x y -> compare (length y) (length x)) . group . mapRCV
 
@@ -142,20 +135,32 @@ isPair cs =
   let (s:t:gs) = getGroup cs
   in length s == 2 && length t == 1
 
-isNone cs =
-  let (s:gs) = getGroup cs
-  in length s == 1
-
+getHandValue :: [Card] -> (PokerHands, Int)
 getHandValue cs
-  | isFlush cs && isStr = (StraightFlush, strVal)
+  | isFlush cs && isStraight cs = (StraightFlush, cv)
   | isFourKind cs = (FourKind, cv)
   | isFullHouse cs = (FullHouse, cv)
   | isFlush cs = (Flush, cv)
-  | isStr = (Straight, strVal)
+  | isStraight cs = (Straight, cv)
   | isThreeKind cs = (ThreeKind, cv)
   | isTwoPair cs = (TwoPair, cv)
-  | isPair cs = (TwoPair, cv)
+  | isPair cs = (OnePair, cv)
   | otherwise = (HighCard, cv)
-  where (isStr, strVal) = isStraight cs
-        gs = getGroup cs
-        cv = computeValue cs
+  where cv = computeValue cs
+
+evalCards :: [Card] -> Bool
+evalCards cs =
+  let (player1, player2) = splitAt 5 cs
+      (hand1, val1) = getHandValue player1
+      (hand2, val2) = getHandValue player2
+  in if hand1 == hand2
+     then val1 > val2
+     else hand1 > hand2
+
+evalFile :: FilePath -> IO Int
+evalFile f = do
+  allCards <- parseFile f
+  let trueMap = map evalCards allCards
+  return . length . filter id $ trueMap
+
+main = evalFile "p054_poker.txt" >>= print
