@@ -1,6 +1,5 @@
 import qualified Data.Bimap as BM
 import Data.List (group,sort,sortBy)
-import Data.Ord (compare)
 
 data PokerHands = HighCard
                 | OnePair
@@ -94,7 +93,7 @@ parseFile f = do
   let w = map (map read . words) . lines $ fh
   return w
 
-cardValue (Card r _) = fromEnum r + 2
+cardValue c = fromEnum (rank c) + 2
 
 revSort = sortBy (flip compare)
 
@@ -115,38 +114,34 @@ isStraight cs = check $ mapCV cs
 
 getGroup = sortBy (\x y -> compare (length y) (length x)) . group . mapRCV
 
-isFullHouse cs =
-  let (t:p:gs) = getGroup cs
-  in length t == 3 && length p == 2
+matchGroup (x,y) cs =
+  let (a:b:_) = getGroup cs
+  in length a == x && length b == y
 
-isFourKind cs =
-  let (f:gs) = getGroup cs
-  in length f == 4
+isFullHouse = matchGroup (3,2)
 
-isThreeKind cs =
-  let (t:gs) = getGroup cs
-  in length t == 3
+isFourKind = matchGroup (4,1)
 
-isTwoPair cs =
-  let (s:t:gs) = getGroup cs
-  in length s == 2 && length t == 2
+isThreeKind = matchGroup (3,1)
 
-isPair cs =
-  let (s:t:gs) = getGroup cs
-  in length s == 2 && length t == 1
+isTwoPair = matchGroup (2,2)
+
+isPair = matchGroup (2,1)
+
+getHand :: [Card] -> PokerHands
+getHand cs
+  | isFlush cs && isStraight cs = StraightFlush
+  | isFourKind cs = FourKind
+  | isFullHouse cs = FullHouse
+  | isFlush cs = Flush
+  | isStraight cs = Straight
+  | isThreeKind cs = ThreeKind
+  | isTwoPair cs = TwoPair
+  | isPair cs = OnePair
+  | otherwise = HighCard
 
 getHandValue :: [Card] -> (PokerHands, Int)
-getHandValue cs
-  | isFlush cs && isStraight cs = (StraightFlush, cv)
-  | isFourKind cs = (FourKind, cv)
-  | isFullHouse cs = (FullHouse, cv)
-  | isFlush cs = (Flush, cv)
-  | isStraight cs = (Straight, cv)
-  | isThreeKind cs = (ThreeKind, cv)
-  | isTwoPair cs = (TwoPair, cv)
-  | isPair cs = (OnePair, cv)
-  | otherwise = (HighCard, cv)
-  where cv = computeValue cs
+getHandValue cs = (getHand cs, computeValue cs)
 
 evalCards :: [Card] -> Bool
 evalCards cs =
