@@ -34,11 +34,11 @@ values 0th, 2nd, 4th, 10th is the answer. For 0,
 
 
 incPaths xs = 1:incPaths' xs
-  where incPaths' (b:[]) = [1]
+  where incPaths' [b] = [1]
         incPaths' (a:b:bs) = a + b : incPaths' (b:bs)
 
 decPaths (a:b:bs) = a + b : decPaths (b:bs)
-decPaths (b:[]) = []
+decPaths [b] = []
 decPaths [] = []
 
 -- "normal" way to implement pascal's triange

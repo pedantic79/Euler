@@ -26,10 +26,10 @@ numStr = [ (0,"zero"), (1,"one"), (2,"two"), (3,"three"), (4,"four")
 
 toEnglish :: String -> String
 toEnglish "1000" = "onethousand"
-toEnglish (o:[]) = lookStr [o]
-toEnglish (t:o:[]) = lookStr [t,o]
+toEnglish [o] = lookStr [o]
+toEnglish (t:[o]) = lookStr [t,o]
 toEnglish (h:"00") = lookStr [h] ++ "hundred"
-toEnglish (h:t:o:[]) = lookStr [h] ++ "hundredand" ++ lookStr [t,o]
+toEnglish (h:t:[o]) = lookStr [h] ++ "hundredand" ++ lookStr [t,o]
 
 problem17 = sum . map (length . toEnglish . show) $ [1..1000] 
 

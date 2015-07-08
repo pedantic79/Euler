@@ -12,7 +12,7 @@ run p ch = filter ((==8) . length) . map (primeVars p ch . show) $ primeL p
 problem51 = head . concat $ run 5 '1'
 
 
-f = head $ [ str2Int p | p <- map show primes, any (check p) "0123456789" ]
+f = head [ str2Int p | p <- map show primes, any (check p) "0123456789" ]
 repStr fr to str = read $ map (\c -> if c == fr then to else c) str
 
 check p d = length idxs >= 3 && length vartns == 8
