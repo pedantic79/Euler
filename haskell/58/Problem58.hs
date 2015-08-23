@@ -5,16 +5,17 @@ import Data.Numbers.Primes (isPrime)
 -- Taken from problem 28
 rowStp = map (\x -> ((x - 2)^2+1, x^2, x-2)) [3,5..]
 
-integerSqrt = toInteger . floor . sqrt . fromIntegral
+integerSqrt = floor . sqrt . fromIntegral
 
 -- Produce the corner values
+corners :: [[Int]]
 corners = map mkRow rowStp
   where
     mkRow (l,h,s) = let a = l + s
                         b = a + s + 1
                     in [a, b .. h]
       
-primeCorners = map (toInteger . length . filter isPrime) corners
+primeCorners = map (length . filter isPrime) corners
 count = let num = 5 : repeat 4
         in zip primeCorners num
 
