@@ -1,7 +1,5 @@
 import Data.Bits (xor)
-import Data.Char (chr,ord)
-import Data.List (permutations)
-import qualified Data.Text as T
+import Data.Char (ord)
 
 xorData key = zipWith xor (concat . repeat $ key)
 
@@ -9,22 +7,19 @@ keys = [map ord [a, b, c] | a <- ['a' .. 'z']
                           , b <- ['a' .. 'z']
                           , c <- ['a' .. 'z']]
 
-decrypt n =  map (map chr . (`xorData` n)) keys
+decrypt n = map (`xorData` n) keys
 
+checkStr = all check
+  where                --  ' '     'z'      '/'     '`'
+    check c = all ($c) [(>=32), (<=122), (/=47), (/=96)]
 
-checkStr s = filt s == T.empty
-  where
-    filt = T.filter check . T.pack
-    check c = not . all ($c) $ [(>=' '), (<='z'), (/='/'), (/= '`')]
-
-problem59 = sum . map ord . head . filter checkStr . decrypt
+problem59 = sum . head . filter checkStr . decrypt
 
 readData :: FilePath -> IO [Int]
 readData fp = do
   f <- readFile fp
   return . read $ "[" ++ f ++ "]"
 
--- 107359
+-- 107359/0.08s
 main = readData "p059_cipher.txt" >>= print . problem59
-  
-      
+
