@@ -1,13 +1,16 @@
 import qualified Data.List as L
-import qualified Data.Set as S
+import Control.Monad (ap)
 
-permuteInt :: Integer -> [Integer]
-permuteInt = uniq . map read . filter (\n -> head n /= '0') .  L.permutations . show
+cubeList' = map (^3) [1..]
 
-p = permuteInt 41063625
+cubeList l m = takeWhile (len (<=m)) . dropWhile (len (<l)) $ cubeList'
+  where len p = p . length . show
 
-uniq = S.elems . S.fromList
+groupNumVal = ap (,) (L.sort . show)
 
-cubes = S.fromList . map (\x -> x*x*x) $ [1..100000]
+grpSnd = L.groupBy (\(_,x) (_,y) -> x == y) . L.sortBy (\(_,x) (_,y) -> compare x y)
 
-example = filter (`S.member` cubes) p
+-- 127035954683
+problem62 = L.minimum . map fst .  concat . f 5 . grpSnd . map groupNumVal $ cubeList 1 12
+  where
+    f x = filter (\n -> length n == x)
