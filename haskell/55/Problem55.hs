@@ -19,8 +19,7 @@ checkLychrel = aux 0
   where
     aux 30 m = True
     aux c  m = let m' = m + revNum m
-               in if isNumPalin m'
-                  then False
-                  else aux (c + 1) m'
+               in (not (isNumPalin m')
+                   && aux (c + 1) m')
 
 problem55 = length . filter checkLychrel $ [1..10000]
