@@ -30,8 +30,8 @@ instance Show Suit where
 instance Read Suit where
   readsPrec _ (x:xs) =
     case BM.lookupR [x] suitStrMap of
-     Nothing -> []
-     Just n  -> [(n, xs)]
+      Nothing -> []
+      Just n  -> [(n, xs)]
 
 data Rank = Two
           | Three
@@ -69,8 +69,8 @@ instance Show Rank where
 instance Read Rank where
   readsPrec _ (x:xs) =
     case BM.lookupR [x] rankStrMap of
-     Nothing -> []
-     Just n  -> [(n, xs)]
+      Nothing -> []
+      Just n  -> [(n, xs)]
 
 data Card = Card { rank :: Rank
                  , suit :: Suit
