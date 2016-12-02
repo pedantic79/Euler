@@ -1,11 +1,12 @@
+module P001.Problem1Spec (main, spec) where
+
 import Test.Hspec
+import P001.Problem1
 
-mult3or5 n = sum [ x | x <- [1..(n-1)]
-                     , x `mod` 3 == 0 || x `mod` 5 == 0 ]
+main  = hspec spec
 
-problem1 = mult3or5 1000
-
-main  = hspec $
+spec :: Spec
+spec =
   describe "problem1" $ do
     it "Sum of all multiples of 3 or 5 below 10" $
       mult3or5 10 `shouldBe` 23

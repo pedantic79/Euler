@@ -1,13 +1,13 @@
+module P006.Problem6Spec (main, spec) where
+
 import Test.Hspec
+import P006.Problem6
 
-sumOfSquares = sum . map (^2)
-squareOfSums = (^2) . sum
+main :: IO ()
+main = hspec spec
 
-diff n = squareOfSums [1..n] - sumOfSquares [1..n]
-
-problem6 = diff 100
-
-main = hspec $
+spec :: Spec
+spec =
   describe "problem6" $ do
     it "Square of the sums of 1 to 10 - sum of squares of 1 to 10" $
       diff 10 `shouldBe` 2640

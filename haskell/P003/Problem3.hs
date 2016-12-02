@@ -1,10 +1,9 @@
-import Test.Hspec
-
+module P003.Problem3 (prime, problem3) where
 {- Divide the number by the factor over and over again until the remainder is
    not zero. Prepend that factor. If the remainder is not zero,
    then increment the factor by 1 (this is only necessary because 2 -> 3)
 
-   If factor is the square root of m then stop 
+   If factor is the square root of m then stop
 
 -}
 
@@ -18,12 +17,3 @@ prime m = prime' 2 m
 
 
 problem3 = maximum $ prime 600851475143
-
-main = hspec $
-  describe "problem3" $ do
-    it "The prime factors of 13195" $
-      prime 13195 `shouldBe` [5, 7, 13, 29]
-  
-    it "The largest prime factor of the number 600851475143" $
-      problem3 `shouldBe` 6857
-    
