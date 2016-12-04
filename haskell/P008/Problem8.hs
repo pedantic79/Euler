@@ -1,3 +1,5 @@
+module P008.Problem8 (prod, problem8, numbers) where
+
 import Data.Char
 
 dataStr = "73167176531330624919225119674426574742355349194934\
@@ -23,9 +25,9 @@ dataStr = "73167176531330624919225119674426574742355349194934\
 
 numbers = map digitToInt dataStr
 
-prod n xs | length xs > n = max p . prod n $ tail xs
-          | otherwise     = 0
+prod n xs
+  | length xs > n = max p . prod n $ tail xs
+  | otherwise     = 0
   where p = product $ take n xs
 
 problem8 = prod 13 numbers
-        
