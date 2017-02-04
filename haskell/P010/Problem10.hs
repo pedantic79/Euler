@@ -1,3 +1,5 @@
+module P010.Problem10 (problem10, example10) where
+
 import Data.Maybe (mapMaybe)
 import Data.List (inits)
 
@@ -24,7 +26,8 @@ primesST = 2 : oddprimes
       ++ sieve (q+2) (head t^2) t ft
 
 -- 142913828922
-problem10 = sum $ takeWhile (<2000000) primes
+problem10 = sum $ takeWhile (<2000000) primesST
+example10 = sum $ takeWhile (<10) primesST
 
 {-
 Prelude> let x = 3

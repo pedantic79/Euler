@@ -1,4 +1,6 @@
-import Data.List (transpose)
+module P011.Problem11 (problem11) where
+
+import Data.List (tails, transpose)
 
 numStr = [ "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08"
          , "49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00"
@@ -26,22 +28,18 @@ numStr = [ "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08"
 numMatrix :: [[Integer]]
 numMatrix = map (map read . words) numStr
 
-
 -- given a list, it takes m-elements, takes the product and returns
 -- a list containing them
-prod m l | length l >= m = p:prod m t
-         | otherwise     = []
-  where p = product $ take m l
-        t = tail l
+prod m = map (product . take m) . tails
 
 -- takes m rows, and shift them
-diagDown m l@(x:xs) | length l >= m = rows : diagDown m xs
-                    | otherwise     = []
+diagDown m l@(x:xs)
+  | length l >= m = rows : diagDown m xs
+  | otherwise     = []
   where rows = shiftRows $ take m (x:xs)
 
 -- shift the top row 0, the next 1, and the next 2..
-shiftRows [] = []
-shiftRows (r:rs) = r:shiftRows (map tail rs)
+shiftRows = zipWith drop [0..]
 
 prod4 = maximum . map (prod 4)
 diagDown4 = diagDown 4
